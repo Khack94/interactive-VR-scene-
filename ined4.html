@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive VR Scene</title>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <a-scene>
+    <!-- Sky -->
+    <a-sky color="#87CEEB"></a-sky>
+
+    <!-- Ground -->
+    <a-plane color="#7CFC00" rotation="-90 0 0" width="100" height="100"></a-plane>
+
+    <!-- Lighting -->
+    <a-light type="directional" position="2 4 3" intensity="0.8"></a-light>
+    <a-light type="ambient" intensity="0.5"></a-light>
+
+    <!-- Custom 3D Model -->
+    <a-entity 
+      gltf-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Duck/glTF/Duck.gltf" 
+      position="0 1 -4" 
+      scale="0.5 0.5 0.5">
+    </a-entity>
+
+    <!-- Box (Interactive) -->
+    <a-box 
+      position="2 1 -5" 
+      rotation="0 45 0" 
+      color="#4CC3D9" 
+      spin-on-click 
+      event-set__enter="_event: mouseenter; color: #FF6347" 
+      event-set__leave="_event: mouseleave; color: #4CC3D9">
+    </a-box>
+
+    <!-- Sphere (Interactive) -->
+    <a-sphere 
+      position="-2 1 -5" 
+      radius="1.25" 
+      color="#FFC65D"
+      hover-scale
+      event-set__enter="_event: mouseenter; color: #FFD700"
+      event-set__leave="_event: mouseleave; color: #FFC65D">
+    </a-sphere>
+
+    <!-- Sound -->
+    <a-entity sound="src: url(https://cdn.pixabay.com/audio/2023/03/28/audio_b3fddedc46.mp3); autoplay: true; loop: true;"></a-entity>
+
+    <!-- Camera and Cursor -->
+    <a-camera position="0 1.6 0">
+      <a-cursor color="red"></a-cursor>
+    </a-camera>
+  </a-scene>
+
+  <script>
+    // Custom Component: Rotate Object on Click
+    AFRAME.registerComponent('spin-on-click', {
+      init: function () {
+        this.el.addEventListener('click', () => {
+          this.el.setAttribute('rotation', {
+            x: this.el.getAttribute('rotation').x + 45,
+            y: this.el.getAttribute('rotation').y + 45,
+            z: this.el.getAttribute('rotation').z
+          });
+        });
+      }
+    });
+
+    // Custom Component: Scale Object on Hover
+    AFRAME.registerComponent('hover-scale', {
+      init: function () {
+        this.el.addEventListener('mouseenter', () => {
+          this.el.setAttribute('scale', '1.5 1.5 1.5');
+        });
+        this.el.addEventListener('mouseleave', () => {
+          this.el.setAttribute('scale', '1 1 1');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
